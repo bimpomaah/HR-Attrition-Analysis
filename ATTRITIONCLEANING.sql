@@ -1,25 +1,21 @@
 
--- Viewing general hr dataset
+-- Viewing general hr dataset from HRanalytics database
 SELECT * FROM HRanalytics.general_data;
 
 select distinct EmployeeCount FROM HRanalytics.general_data;
 
-select businessTravel from HRanalytics.general_data;
-update general_data 
-set businessTravel='_'
-where businessTravel like '%-%';
--- encountered an error which changed the whole text to _ 
-
 select distinct businessTravel FROM HRanalytics.general_data;
-drop table HRanalytics.general_data;
--- dropped table to load all 
 
 -- creating new table like general_data to have backup table so i have original data
 create table genHRdata like HRanalytics.general_data;
-insert into businessTravel 
+
+-- inserting contents of general_data into new table created (genHRdata)
+insert into genHRdata 
 select * from HRanalytics.general_data;
 
+--Load new table genHRdata
 select * from HRanalytics.genHRdata ;
+
 select distinct businessTravel FROM genHRdata ;
 
 -- Cleaning,formatting and standardizing data
@@ -27,6 +23,7 @@ UPDATE  genHRdata
 SET businessTravel = REPLACE(businessTravel, '-', '_')
 WHERE businessTravel LIKE '%-%';
 
+-- Checking if change applied
 SELECT businessTravel
 FROM genHRdata 
 WHERE businessTravel = 'Non-Travel';
@@ -39,7 +36,7 @@ update genHRdata
 set Education='Below College'
 where Education =1;
 
--- updating the 'education column from int to text
+-- updating the 'education' column from datatype int to text
 Alter table genHRdata
 modify column Education varchar(50);
 
